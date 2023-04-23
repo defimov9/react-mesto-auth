@@ -8,16 +8,16 @@ function Header({ email }) {
         <Route
           path='/sign-in'
           element={
-            <Link className='header__link' to='/sign-in'>
-              Войти
+            <Link className='header__link' to='/sign-up'>
+              Регистрация
             </Link>
           }
         />
         <Route
           path='/sign-up'
           element={
-            <Link className='header__link' to='/sign-up'>
-              Регистрация
+            <Link className='header__link' to='/sign-in'>
+              Войти
             </Link>
           }
         />
