@@ -13,6 +13,7 @@ import ConfirmationPopup from './ConfirmationPopup';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
+import InfoTooltip from './InfoTooltip';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -202,6 +203,12 @@ function App() {
             card={deletingCard}
             onDeleteCard={handleDeleteCardSubmit}
             isLoading={isLoading}
+          />
+
+          <InfoTooltip
+            isSuccess={true}
+            isOpen={true}
+            onClose={closeAllPopups}
           />
         </div>
       </div>
