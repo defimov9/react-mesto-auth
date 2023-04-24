@@ -15,3 +15,9 @@
 .form__submit:hover {
     opacity: 0.85;
 }
+
+@media screen and (max-width: 375px) {
+    .form__submit {
+        margin-top: 150px;
+    }
+}
