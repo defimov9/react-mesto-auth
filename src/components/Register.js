@@ -2,13 +2,14 @@ import React from 'react';
 import AuthForm from './AuthForm';
 import { Link } from 'react-router-dom';
 
-const Register = () => {
+const Register = (props) => {
   return (
     <>
       <AuthForm
         title='Регистрация'
         name='register'
         buttonText='Зарегистрироваться'
+        onSubmit={props.onRegister}
       />
       <p className='form__question'>
         Уже зарегистрированы?{' '}

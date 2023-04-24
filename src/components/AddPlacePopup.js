@@ -24,7 +24,8 @@ const AddPlacePopup = (props) => {
       onSubmit={handleSubmit}
       name='add-photo'
       title='Новое место'
-      buttonText={buttonText}>
+      buttonText={buttonText}
+      isLoading={props.isLoading}>
       <input
         type='text'
         name='name'

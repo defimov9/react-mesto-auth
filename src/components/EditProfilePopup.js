@@ -30,7 +30,8 @@ const EditProfilePopup = (props) => {
       onSubmit={handleSubmit}
       name='edit-profile'
       title='Редактировать профиль'
-      buttonText={buttonText}>
+      buttonText={buttonText}
+      isLoading={props.isLoading}>
       <input
         type='text'
         name='name'

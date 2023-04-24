@@ -21,7 +21,8 @@ const EditAvatarPopup = (props) => {
       onSubmit={handleSubmit}
       name='update-avatar'
       title='Обновить аватар'
-      buttonText={buttonText}>
+      buttonText={buttonText}
+      isLoading={props.isLoading}>
       <input
         type='url'
         name='link'

@@ -1,6 +1,6 @@
 import { Link, Route, Routes } from 'react-router-dom';
 
-function Header({ email }) {
+function Header({ email, onLogout }) {
   return (
     <header className='header'>
       <div className='header__logo' />
@@ -25,8 +25,11 @@ function Header({ email }) {
           path='/'
           element={
             <div className='header__info-wrapper'>
-              <p className='header__link_email'>{email}</p>
-              <button className='header__exit' type='button'>
+              <p className='header__link header__link_type_email'>{email}</p>
+              <button
+                className='header__link header__link_type_exit'
+                type='button'
+                onClick={onLogout}>
                 Выйти
               </button>
             </div>

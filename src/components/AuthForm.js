@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 
-const AuthForm = ({ title, name, buttonText }) => {
+const AuthForm = ({ title, name, buttonText, onSubmit }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSubmit(password, email);
+  }
+
   return (
-    <form className='form' action='#' name={name}>
+    <form className='form' action='#' name={name} onSubmit={handleSubmit}>
       <p className='form__title'>{title}</p>
       <div className='form__inputs-wrapper'>
         <input

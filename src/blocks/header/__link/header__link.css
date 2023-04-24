@@ -1,10 +1,12 @@
 .header__link {
-    color: #FFFFFF;
-    text-decoration: none;
+    border: none;
+    background: inherit;
     font-size: 18px;
     line-height: 22px;
+    color: #FFFFFF;
     cursor: pointer;
     transition: opacity 0.2s linear;
+    text-decoration: none;
 }
 
 .header__link:hover {

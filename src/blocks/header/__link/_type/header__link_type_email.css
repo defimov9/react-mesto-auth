@@ -1,0 +1,8 @@
+.header__link_type_email {
+    cursor: default;
+    color: #FFFFFF;
+}
+
+.header__link_type_email:hover {
+    opacity: 1;
+}

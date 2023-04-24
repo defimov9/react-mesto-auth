@@ -17,6 +17,7 @@ const ConfirmationPopup = (props) => {
       name='delete-card'
       title='Вы уверены?'
       buttonText={buttonText}
+      isLoading={props.isLoading}
     />
   );
 };

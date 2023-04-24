@@ -2,7 +2,7 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import React, { useEffect, useState } from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -14,6 +14,7 @@ import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
+import auth from '../utils/auth';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -22,24 +23,45 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
 
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const [selectedCard, setSelectedCard] = useState({});
-  const [deletingCard, setDeletingCard] = useState({});
 
   const [currentUser, setCurrentUser] = useState({});
-  const [cards, setCards] = React.useState([]);
+  const [cards, setCards] = useState([]);
+  const [email, setEmail] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
 
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    Promise.all([api.getUserData(), api.getInitialCards()])
-      .then(([userData, initialCards]) => {
-        setCurrentUser(userData);
-        setCards(initialCards);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+    if (loggedIn) {
+      Promise.all([api.getUserData(), api.getInitialCards()])
+        .then(([userData, initialCards]) => {
+          setCurrentUser(userData);
+          setCards(initialCards);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [loggedIn]);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth
+        .checkToken(jwt)
+        .then((res) => {
+          setLoggedIn(true);
+          setEmail(res.data.email);
+          navigate('/');
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [navigate]);
 
   function handleCardClick(card) {
     setIsImagePopupOpen(true);
@@ -64,6 +86,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsImagePopupOpen(false);
     setIsConfirmationPopupOpen(false);
+    setIsInfoTooltipOpen(false);
   }
 
   function handleCardLike(card) {
@@ -81,7 +104,7 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    setDeletingCard(card);
+    setSelectedCard(card);
     setIsConfirmationPopupOpen(true);
   }
 
@@ -141,14 +164,53 @@ function App() {
       });
   }
 
+  function handleRegister(password, email) {
+    auth
+      .register(password, email)
+      .then(() => {
+        setIsSuccess(true);
+        setIsInfoTooltipOpen(true);
+        navigate('/sign-in');
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsInfoTooltipOpen(true);
+        console.log(err);
+      });
+  }
+
+  function handleLogin(password, email) {
+    auth
+      .login(password, email)
+      .then((res) => {
+        localStorage.setItem('jwt', res.token);
+        setLoggedIn(true);
+        navigate('/');
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setIsInfoTooltipOpen(true);
+        console.log(err);
+      });
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('jwt');
+    setLoggedIn(false);
+    setEmail('');
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page'>
         <div className='container'>
-          <Header />
+          <Header email={email} onLogout={handleLogout} />
           <Routes>
-            <Route path='/sign-in' element={<Login />} />
-            <Route path='/sign-up' element={<Register />} />
+            <Route path='/sign-in' element={<Login onLogin={handleLogin} />} />
+            <Route
+              path='/sign-up'
+              element={<Register onRegister={handleRegister} />}
+            />
             <Route
               path='/'
               element={
@@ -200,14 +262,14 @@ function App() {
           <ConfirmationPopup
             isOpen={isConfirmationPopupOpen}
             onClose={closeAllPopups}
-            card={deletingCard}
+            card={selectedCard}
             onDeleteCard={handleDeleteCardSubmit}
             isLoading={isLoading}
           />
 
           <InfoTooltip
-            isSuccess={true}
-            isOpen={true}
+            isSuccess={isSuccess}
+            isOpen={isInfoTooltipOpen}
             onClose={closeAllPopups}
           />
         </div>
